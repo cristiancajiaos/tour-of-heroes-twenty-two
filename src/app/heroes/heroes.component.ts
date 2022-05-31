@@ -9,16 +9,17 @@ import { Hero } from '../interfaces/hero';
 })
 export class HeroesComponent implements OnInit {
 
-  hero: Hero = {
-    id: 1,
-    name: 'Windstorm'
-  };
+  selectedHero?: Hero;
 
   heroes = HEROES;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  selectHero(hero: Hero) {
+    this.selectedHero = hero;
   }
 
 }
