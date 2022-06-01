@@ -10,9 +10,6 @@ import { Hero } from '../interfaces/hero';
   styleUrls: ['./heroes.component.scss']
 })
 export class HeroesComponent implements OnInit {
-
-  selectedHero?: Hero;
-
   heroes: Hero[] = [];
 
   constructor(
@@ -29,10 +26,4 @@ export class HeroesComponent implements OnInit {
       this.heroes = heroes;
     });
   }
-
-  selectHero(hero: Hero) {
-    this.selectedHero = hero;
-    this.messagesService.add(`Selected hero id=${hero.id}`);
-  }
-
 }
