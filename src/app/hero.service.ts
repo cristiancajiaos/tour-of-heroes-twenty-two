@@ -1,7 +1,7 @@
 import { HEROES } from './constants/mock-heroes';
 import { Hero } from './interfaces/hero';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { catchError, Observable, of } from 'rxjs';
 import { MessagesService } from './messages/messages.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -19,7 +19,11 @@ export class HeroService {
 
   getHeroes(): Observable<Hero[]> {
     this.log(`Fetched heroes`);
-    return this.http.get<Hero[]>(this.heroesUrl);
+    return this.http.get<Hero[]>(this.heroesUrl).pipe(
+      catchError(
+        this.handleError<Hero[]>('getHeroes', [])
+      )
+    );
   }
 
   getHero(id: number): Observable<Hero> {
@@ -31,5 +35,22 @@ export class HeroService {
 
   private log(message: string) {
     this.messagesService.add(`HeroService: ${message}`);
+  }
+
+  /* handleError
+     @operation: Nombre de la operación que falló
+     @result: Valor opcional para regresar como el resultado del observable */
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      // Por hacer: Mandar el error a la infaestructura de registros
+      console.error(error);
+
+      // Por hacer: Hacer un meor trabajo de transformar el error para consumo de usuario
+      this.log(`${operation} failed ${error.message}`);
+
+      // La app sigue funcionando regresando un resultado vacío
+      return of(result as T);
+    }
   }
 }
